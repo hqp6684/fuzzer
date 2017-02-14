@@ -1,12 +1,21 @@
+//https://github.com/cheeriojs/cheerio
 import * as cheerio from 'cheerio';
+// https://github.com/request/request
 import * as request from 'request';
 
 // import {Observable} from 'rxjs';
 function testArgs(){
+    const argsRegex = /\w+(?=)/g;
    if(process.argv.length>2){
-       console.log(process.argv.splice(2));
+       let args = process.argv.splice(2);
+       args.map(arg=>{
+            let pair = arg.match(argsRegex);   
+            console.log(`key : ${pair[0]}`);
+            console.log(`value : ${pair[1]}`);
+       })
    } 
 }
+
 function main(){
     let url = 'https://hpham.co';
     // let 
