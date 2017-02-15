@@ -1,4 +1,4 @@
-image: andymeneely/swen331fuzzer
+image: hqp6684/fuzzer
 before_script:
     # do not change any of the statements in this section
     - service apache2 start
@@ -13,7 +13,7 @@ samsrunner:
     # here is where you can write your commands to run your fuzzer or any custom setup commands
     - echo "hello class"
 #    - ruby fuzzer.rb discover http://localhost/ --custom-auth=dvwa
-    - sudo apt-get install -y nodejs
+    #- sudo apt-get install -y nodejs
     - npm install 
     - npm run buid
     - npm run fuzzer
