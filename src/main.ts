@@ -4,30 +4,34 @@ import * as cheerio from 'cheerio';
 import * as request from 'request';
 
 // import {Observable} from 'rxjs';
-function testArgs(){
+
+
+import { Fuzzer } from './fuzzer/fuzzer';
+
+function testArgs() {
     const argsRegex = /\w+(?=)/g;
-   if(process.argv.length>2){
-       let args = process.argv.splice(2);
-       args.map(arg=>{
-            let pair = arg.match(argsRegex);   
+    if (process.argv.length > 2) {
+        let args = process.argv.splice(2);
+        args.map(arg => {
+            let pair = arg.match(argsRegex);
             console.log(`key : ${pair[0]}`);
             console.log(`value : ${pair[1]}`);
-       })
-   } 
+        })
+    }
 }
 
-function main(){
+function main() {
     let url = 'https://hpham.co';
     // let 
     // let rawDoc =  Observable.bindCallback(request(url, {}, (err,res,body)=>()));
-    
-    request(url, {}, (err, res, body)=>{
-        if(!err){
+
+    request(url, {}, (err, res, body) => {
+        if (!err) {
             // console.log(body);
             let $ = cheerio.load(body);
             let alinks = $(body).find('a')
-            alinks.map(a=>{
-                
+            alinks.map(a => {
+
             })
             console.log(alinks);
         }
@@ -35,5 +39,10 @@ function main(){
     })
 }
 
+function testFuzzer() {
+    let fuzzer = new Fuzzer();
+    fuzzer.getAllElements();
+}
 // main();
 testArgs();
+testFuzzer();
