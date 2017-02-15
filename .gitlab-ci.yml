@@ -1,4 +1,4 @@
-image: hqp6684/fuzzer
+mage: andymeneely/swen331fuzzer
 before_script:
     # do not change any of the statements in this section
     - service apache2 start
