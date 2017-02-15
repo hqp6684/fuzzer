@@ -13,4 +13,7 @@ samsrunner:
     # here is where you can write your commands to run your fuzzer or any custom setup commands
     - echo "hello class"
 #    - ruby fuzzer.rb discover http://localhost/ --custom-auth=dvwa
+    - npm install 
+    - npm run buid
+    - npm run fuzzer
   stage: test
