@@ -21,7 +21,7 @@ function testArgs() {
 }
 
 function main() {
-    let url = 'https://hpham.co';
+    let url = 'http://localhost';
     // let 
     // let rawDoc =  Observable.bindCallback(request(url, {}, (err,res,body)=>()));
 
@@ -41,7 +41,8 @@ function main() {
 
 function testFuzzer() {
     let fuzzer = new Fuzzer();
-    fuzzer.getAllElements();
+    // fuzzer.getAllElements();
+    fuzzer.loginDvwa();
 }
 // main();
 testArgs();
