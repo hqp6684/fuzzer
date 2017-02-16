@@ -1,5 +1,8 @@
+//https://github.com/cheeriojs/cheerio
 import * as cheerio from 'cheerio';
+// https://github.com/request/request
 import * as request from 'request';
+
 import * as fs from 'fs';
 import { Observable } from 'rxjs';
 import { BrowserEmulator } from '../browser-emulator/emulator';
@@ -7,7 +10,7 @@ import { BrowserEmulator } from '../browser-emulator/emulator';
 
 export class Fuzzer {
     private emulator: BrowserEmulator;
-    constructor() {
+    constructor(args: string[]) {
         //    this.emulator = new BrowserEmulator(); 
     }
     private getRawHtml() {
