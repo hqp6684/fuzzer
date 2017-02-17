@@ -45,9 +45,11 @@ export class Fuzzer {
             // TODO, check custom-auth
             if (isValid) {
                 // TODO delete this, this is a test
-                requestGET({ url: this.config.url }).subscribe(res => {
-                    console.log(res.body)
-                })
+                // requestGET({ url: this.config.url }).subscribe(res => {
+                // console.log(res.body)
+                // })
+
+                this.loginDvwa();
 
             }
         })
