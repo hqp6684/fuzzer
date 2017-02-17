@@ -4,7 +4,6 @@ import * as request from 'request';
 
 
 export function urlIsValid(url: string): Observable<boolean> {
-  console.log('in url');
   let observable = Observable.bindCallback(request.get)
 
   let result = observable({ url: url })
