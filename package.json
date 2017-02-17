@@ -4,9 +4,9 @@
   "description": ":",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "fuzzer": "node dist/bundle.js"
+    "fuzzer": "node dist/bundle.js",
+    "test": "webpack && node dist/bundle test http://127.0.0.1 --custom-auth=dvwa"
   },
   "repository": {
     "type": "git",
