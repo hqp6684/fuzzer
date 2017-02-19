@@ -50,22 +50,21 @@ export class Fuzzer {
             case 'discover':
                 fuzzerDiscover(this.config);
                 break;
-
         }
 
-        this.urlIsValid.subscribe(isValid => {
-            // TODO, check custom-auth
-            if (isValid) {
-                // TODO delete this, this is a test
-                // requestGET({ url: this.config.url }).subscribe(res => {
-                // console.log(res.body)
-                // })
-                this.getAllElementsAttribs();
-                this.loginDvwa();
+        // this.urlIsValid.subscribe(isValid => {
+        //     // TODO, check custom-auth
+        //     if (isValid) {
+        //         // TODO delete this, this is a test
+        //         // requestGET({ url: this.config.url }).subscribe(res => {
+        //         // console.log(res.body)
+        //         // })
+        //         this.getAllElementsAttribs();
+        //         this.loginDvwa();
 
 
-            }
-        })
+        //     }
+        // })
     }
     /**
      * Return all non-empty elements 

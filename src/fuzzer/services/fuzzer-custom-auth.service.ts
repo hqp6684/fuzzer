@@ -1,15 +1,16 @@
 import { FuzzerConfig } from '../fuzzer.options';
 import * as url from 'url';
+// import {Url} from 'url'
 import * as path from 'path';
 import * as chalk from 'chalk';
-import { requestGET, requestPOST } from './fuzzer-request.service';
+import { requestGET, requestPOST, RequestResponse } from './fuzzer-request.service';
 
 
 
 export function fuzzerAuthenticator(config: FuzzerConfig) {
   switch (config['custom-auth']) {
     case 'dvwa':
-      this.dvwa(config);
+      dvwaAuth(config);
       break;
   }
 }
@@ -18,7 +19,7 @@ export function fuzzerAuthenticator(config: FuzzerConfig) {
 function dvwaAuth(config: FuzzerConfig) {
   let postTargetFile = './login.php';
 
-  let configURL = new URL(config.url);
+  let configURL = url.parse(config.url);
   let basePath = configURL.pathname;
   let postTargetPath = path.resolve(basePath, postTargetFile);
 
@@ -29,9 +30,15 @@ function dvwaAuth(config: FuzzerConfig) {
     url: postURL,
     form: { 'username': 'admin', 'password': 'password', 'Login': 'Login' }
   }).subscribe(res => {
-    console.log(res.res.headers);
+    // console.log(res.res.headers);
+    getCookie(res);
   })
 
 
 }
 
+function getCookie(res: RequestResponse) {
+  console.log(res);
+  console.log(res.res.headers);
+
+}
