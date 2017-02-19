@@ -1,0 +1,41 @@
+{
+  "statusCode": 302,
+  "body": "",
+  "headers": {
+    "date": "Sun, 19 Feb 2017 18:56:14 GMT",
+    "server": "Apache/2.4.25 (Unix) OpenSSL/1.0.2j PHP/5.6.30 mod_perl/2.0.8-dev Perl/v5.16.3",
+    "x-powered-by": "PHP/5.6.30",
+    "set-cookie": [
+      "PHPSESSID=sof06iksrgpifvkd3kjdh9cp30; path=/",
+      "security=high"
+    ],
+    "expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+    "cache-control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+    "pragma": "no-cache",
+    "location": "index.php",
+    "content-length": "0",
+    "connection": "close",
+    "content-type": "text/html; charset=UTF-8"
+  },
+  "request": {
+    "uri": {
+      "protocol": "http:",
+      "slashes": true,
+      "auth": null,
+      "host": "127.0.0.1",
+      "port": 80,
+      "hostname": "127.0.0.1",
+      "hash": null,
+      "search": null,
+      "query": null,
+      "pathname": "/dvwa/login.php",
+      "path": "/dvwa/login.php",
+      "href": "http://127.0.0.1/dvwa/login.php"
+    },
+    "method": "POST",
+    "headers": {
+      "content-type": "application/x-www-form-urlencoded",
+      "content-length": 44
+    }
+  }
+}

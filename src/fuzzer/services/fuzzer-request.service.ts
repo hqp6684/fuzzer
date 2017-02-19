@@ -51,12 +51,12 @@ function mapRequesResponse(result: any): RequestResponse {
   return observableReturn = { err: result, res: result[1], body: result[2] };
 }
 
-export function requestGET(options: request.UrlOptions): Observable<RequestResponse> {
+export function requestGET(options: CoreOptions): Observable<RequestResponse> {
   let obs = Observable.bindCallback(request.get);
-  // opts.url = 'sadf';
   return obs(options).map(mapRequesResponse);
 }
-export function requestPOST(options: request.UrlOptions): Observable<RequestResponse> {
+
+export function requestPOST(options: CoreOptions ): Observable<RequestResponse> {
   let obs = Observable.bindCallback(request.post);
   // opts.url = 'sadf';
   return obs(options).map(mapRequesResponse);
@@ -66,4 +66,8 @@ export interface RequestResponse {
   err: Error;
   res: request.RequestResponse;
   body: string;
+}
+
+export interface CoreOptions extends request.CoreOptions {
+  url: string;
 }

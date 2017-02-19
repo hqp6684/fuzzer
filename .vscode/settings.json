@@ -1,0 +1,42 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  "files.eol": "\n",
+  "editor.formatOnSave": true,
+  //tells vsc to use tsc in node_modules 
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "workbench.editor.showIcons": true,
+  "vim.insertModeKeyBindings": [{
+    "before": [
+      "j",
+      "k"
+    ],
+    "after": [
+      "<Esc>"
+    ]
+  }],
+  "vim.otherModesKeyBindings": [{
+    "before": [
+      "j",
+      ";"
+    ],
+    "after": [
+      "<Esc>"
+    ]
+  }],
+  // turn off ide ctrl keys
+  //"vim.useCtrlKeys": true,
+  //"vim.autoindent": true,
+  //"tslint.enable": true,
+  "editor.tabSize": 2,
+  "eslint.autoFixOnSave": true,
+  "tslint.autoFixOnSave": true,
+  // "terminal.integrated.shell.windows": "C:\\cygwin64\\bin\\bash.exe" // "C:\\Users\\hpham24\\AppData\\Local\\Programs\\Git\\bin\\bash.exe"
+  // hide files from Explorer 
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/*.spec.ts": true
+  }
+}
