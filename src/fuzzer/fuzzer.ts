@@ -1,3 +1,5 @@
+import { fuzzerDiscover } from './services/fuzzer-discover.service';
+import { fuzzerTest } from './services/fuzzer-test.service';
 import { isEmpty } from 'rxjs/operator/isEmpty';
 import { AsyncSubject } from 'rxjs/Rx';
 import { FuzzerConfig, FuzzerOption } from './fuzzer.options';
@@ -42,8 +44,13 @@ export class Fuzzer {
 
     whatNext() {
         switch (this.config.command) {
-            case 'test': break;
-            case 'discover': break;
+            case 'test':
+                fuzzerTest(this.config);
+                break;
+            case 'discover':
+                fuzzerDiscover(this.config);
+                break;
+
         }
 
         this.urlIsValid.subscribe(isValid => {
