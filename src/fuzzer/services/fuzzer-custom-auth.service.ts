@@ -1,3 +1,4 @@
+import { Cookie } from 'request';
 import { FuzzerConfig } from '../fuzzer.options';
 import * as url from 'url';
 // import {Url} from 'url'
@@ -24,7 +25,7 @@ function dvwaAuth(config: FuzzerConfig) {
   let postTargetPath = path.resolve(basePath, postTargetFile);
 
   let postURL = url.resolve(config.url, postTargetPath);
-
+  console.log(postURL);
 
   requestPOST({
     url: postURL,
@@ -40,5 +41,10 @@ function dvwaAuth(config: FuzzerConfig) {
 function getCookie(res: RequestResponse) {
   console.log(res);
   console.log(res.res.headers);
+  // extract cookie
+  let setCookie = res.res.headers['Set-Cookie']
+  let headerKeys = Object.keys(res.res.headers);
+  let cookieHeaders = headerKeys.filter(header => new RegExp('cookie', 'g').test(header));
+  console.log(cookieHeaders);
 
 }
