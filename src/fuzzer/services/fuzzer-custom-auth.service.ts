@@ -54,6 +54,7 @@ function dvwaAuth(config: FuzzerConfig) {
 
 function getCookie(res: RequestResponse): Array<string> {
 
+  printRes(res);
   console.log(chalk.bgBlack.cyan.bold('Looking for Set-Cookie Header'));
   // extract cookie
   let headerKeys = Object.keys(res.res.headers);
