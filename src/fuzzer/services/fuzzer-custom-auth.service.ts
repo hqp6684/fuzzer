@@ -122,35 +122,30 @@ function postCredential(postURL: string, res: RequestResponse) {
 function getIndexAfterPostCredential(url: string, cookieHeader: string) {
   return requestGET({ url: url, headers: { 'Cookie': cookieHeader } })
     .map(res => {
-      printRes(res, url);
-      // return res;
-
+      printRes(res, url, true);
     })
 }
 
-function findLoginForm(res: RequestResponse) {
-  let $ = cheerio.load(res.body);
-  let inputs = $('form').find('input')
-  // .map((index, el) => {
-  //   console.log(el.attribs);
-  // })
-  let cookieHeader = extractCookieHeader(getCookie(res));
-  return { inputs: inputs, cookieHeader: cookieHeader };
-
-}
-function printRes(res: RequestResponse, url?: string) {
+function printRes(res: RequestResponse, url?: string, loggedIn?: boolean) {
   if (url) {
     console.log(chalk.bgBlack.bold.green('URL'));
     console.log(chalk.blue(url));
   }
-  console.log(chalk.green('Request Headers'));
-  console.log(res.res.request.headers);
   console.log(chalk.green('Request Method'));
   console.log(res.res.request.method);
-  console.log(chalk.bold.bgBlack.cyan('Response Form'));
+  console.log(chalk.green('Request Headers'));
+  console.log(res.res.request.headers);
+  console.log(chalk.bold.bgBlack.cyan('Request Form'));
   console.log(res.res.request.form)
   console.log(chalk.green('Request Response Headers'));
   console.log(res.res.headers);
+  console.log(chalk.green('Request Response Status Code'));
+  console.log(res.res.statusCode);
+  console.log(chalk.green('Request Response Status Message'));
+  console.log(res.res.statusMessage);
   console.log(chalk.bold.bgBlack.cyan('Response Body'));
   console.log(res.body);
+  if (loggedIn) {
+    cheerio.load(res.body)('.message').html();
+  }
 }

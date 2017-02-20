@@ -52,19 +52,6 @@ export class Fuzzer {
                 break;
         }
 
-        // this.urlIsValid.subscribe(isValid => {
-        //     // TODO, check custom-auth
-        //     if (isValid) {
-        //         // TODO delete this, this is a test
-        //         // requestGET({ url: this.config.url }).subscribe(res => {
-        //         // console.log(res.body)
-        //         // })
-        //         this.getAllElementsAttribs();
-        //         this.loginDvwa();
-
-
-        //     }
-        // })
     }
     /**
      * Return all non-empty elements 
@@ -82,24 +69,6 @@ export class Fuzzer {
                     }
                 });
             })
-    }
-
-    loginDvwa() {
-
-        // requestPOST
-
-        // if(this.config['custom-])
-        let customAuthConfig: FuzzerOption = 'custom-auth';
-        let url = this.config.url.concat()
-
-        let post = requestPOST({
-            url: this.config.url,
-            form: { 'username': 'admin', 'password': 'password', 'Login': 'Login' }
-        }).subscribe(res => {
-            console.log(res.res.headers);
-
-
-        })
     }
 
 }
