@@ -4,7 +4,8 @@ import * as url from 'url';
 // import {Url} from 'url'
 import * as path from 'path';
 import * as chalk from 'chalk';
-import { requestGET, requestPOST, RequestResponse } from './fuzzer-request.service';
+import * as cheerio from 'cheerio';
+import { requestGET, requestPOST, RequestResponse, CoreOptions } from './fuzzer-request.service';
 
 
 
@@ -38,10 +39,11 @@ function dvwaAuth(config: FuzzerConfig) {
   let cookieHeader;
 
   requestGET({ url: postURL })
-    .map(getCookie)
-    .filter(header => header ? true : false)
-    .map(extractCookieHeader)
-    .flatMap(cookie => postCredential(postURL, cookie))
+    // .map(findLoginForm)
+    // .map(getCookie)
+    // .filter(header => header ? true : false)
+    // .map(extractCookieHeader)
+    .flatMap(res => postCredential(postURL, res))
     .flatMap(cookie => getIndexAfterPostCredential(getURL, cookie))
     .subscribe(res => {
       console.log(chalk.bgBlack.cyan.bold('Finish'));
@@ -54,7 +56,7 @@ function dvwaAuth(config: FuzzerConfig) {
 
 function getCookie(res: RequestResponse): Array<string> {
 
-  printRes(res);
+  // printRes(res);
   console.log(chalk.bgBlack.cyan.bold('Looking for Set-Cookie Header'));
   // extract cookie
   let headerKeys = Object.keys(res.res.headers);
@@ -85,10 +87,29 @@ function extractCookieHeader(header: Array<String>) {
   return cookieHeader;
 }
 
-function postCredential(postURL: string, cookieHeader: string) {
+function postCredential(postURL: string, res: RequestResponse) {
+  // security level = impossible
+  let user_token: string;
+  let $ = cheerio.load(res.body);
+  let inputs = $('form').find('input').map((index, input) => {
+    let name = $(input).attr('name');
+    // console.log(nameValue);
+    name === 'user_token' ? user_token = $(input).attr('value') : user_token = undefined;
+  })
+
+  // .map((index, el) => {
+  //   console.log(el.attribs);
+  // })
+  let cookieHeader = extractCookieHeader(getCookie(res));
+  let form = { 'username': 'admin', 'password': 'password', 'Login': 'Login' };
+  if (user_token) {
+    (<any>form)['user_token'] = user_token;
+  }
+  // console.log(form);
+
   return requestPOST({
     url: postURL,
-    form: { 'username': 'admin', 'password': 'password', 'Login': 'Login' },
+    form: form,
     headers: { 'Cookie': cookieHeader }
   })
     .map(res => {
@@ -102,11 +123,21 @@ function getIndexAfterPostCredential(url: string, cookieHeader: string) {
   return requestGET({ url: url, headers: { 'Cookie': cookieHeader } })
     .map(res => {
       printRes(res, url);
-      return res;
+      // return res;
 
     })
 }
 
+function findLoginForm(res: RequestResponse) {
+  let $ = cheerio.load(res.body);
+  let inputs = $('form').find('input')
+  // .map((index, el) => {
+  //   console.log(el.attribs);
+  // })
+  let cookieHeader = extractCookieHeader(getCookie(res));
+  return { inputs: inputs, cookieHeader: cookieHeader };
+
+}
 function printRes(res: RequestResponse, url?: string) {
   if (url) {
     console.log(chalk.bgBlack.bold.green('URL'));
