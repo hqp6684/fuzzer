@@ -105,7 +105,7 @@ function postCredential(postURL: string, res: RequestResponse) {
   if (user_token) {
     (<any>form)['user_token'] = user_token;
   }
-  // console.log(form);
+  console.log(form);
 
   return requestPOST({
     url: postURL,
@@ -145,6 +145,10 @@ function printRes(res: RequestResponse, url?: string) {
   }
   console.log(chalk.green('Request Headers'));
   console.log(res.res.request.headers);
+  console.log(chalk.green('Request Method'));
+  console.log(res.res.request.method);
+  console.log(chalk.bold.bgBlack.cyan('Response Form'));
+  console.log(res.res.request.form)
   console.log(chalk.green('Request Response Headers'));
   console.log(res.res.headers);
   console.log(chalk.bold.bgBlack.cyan('Response Body'));
