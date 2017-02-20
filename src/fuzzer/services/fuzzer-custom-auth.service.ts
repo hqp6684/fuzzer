@@ -37,7 +37,7 @@ function dvwaAuth(config: FuzzerConfig) {
 
   let cookieHeader;
 
-  requestGET({ url: config.url })
+  requestGET({ url: postURL })
     .map(getCookie)
     .filter(header => header ? true : false)
     .map(extractCookieHeader)
