@@ -19,35 +19,41 @@ export function fuzzerAuthenticator(config: FuzzerConfig) {
 
 function dvwaAuth(config: FuzzerConfig) {
   let postTargetFile = './login.php';
+  // this is hard-coded,
+  // TODO: get this path from response header after post credential response headers['location']
+  let indexAfterPostCredentialTargetFile = './index.php';
 
   let configURL = url.parse(config.url);
   let basePath = configURL.pathname;
   let postTargetPath = path.resolve(basePath, postTargetFile);
+  // path to get inddex file after login
+  let indexAfterPostCredentialTargetPath = path.resolve(basePath, indexAfterPostCredentialTargetFile);
 
   let postURL = url.resolve(config.url, postTargetPath);
-  console.log(postURL);
+  let getURL = url.resolve(config.url, indexAfterPostCredentialTargetPath);
+  // console.log(postURL);
+
+  let cookieHeader;
 
   requestGET({ url: config.url })
     .map(getCookie)
     .filter(header => header ? true : false)
     .map(extractCookieHeader)
-    // .flatMap(requestPOST())
-    .subscribe(cookieHeader => {
-      // let cookieHeader = extractCookieHeader(rawSetCookie);
-      console.log(cookieHeader);
+    .flatMap(cookie => postCredential(postURL, cookie))
+    .flatMap(cookie => getIndexAfterPostCredential(getURL, cookie))
+    .subscribe(res => {
+      console.log(chalk.bgBlack.cyan.bold('Finish'));
 
-      requestPOST({
-        url: postURL,
-        form: { 'username': 'admin', 'password': 'password', 'Login': 'Login' },
-        headers: { 'Cookie': cookieHeader }
+      // console.log(cookieHeader);
 
-      }).subscribe(res => {
-        console.log(chalk.green('Request Headers'));
-        console.log(res.res.request.headers);
-        console.log(chalk.green('Request Response Headers'));
-        console.log(res.res.headers);
+      // requestPOST({
+      //   url: postURL,
+      //   form: { 'username': 'admin', 'password': 'password', 'Login': 'Login' },
+      //   headers: { 'Cookie': cookieHeader }
 
-      })
+      // }).subscribe(res => {
+
+      // })
 
     })
 
@@ -85,7 +91,36 @@ function extractCookieHeader(header: Array<String>) {
   return cookieHeader;
 }
 
+function postCredential(postURL: string, cookieHeader: string) {
+  return requestPOST({
+    url: postURL,
+    form: { 'username': 'admin', 'password': 'password', 'Login': 'Login' },
+    headers: { 'Cookie': cookieHeader }
+  })
+    .map(res => {
+      console.log(chalk.green('Request Headers'));
+      console.log(res.res.request.headers);
+      console.log(chalk.green('Request Response Headers'));
+      console.log(res.res.headers);
+      console.log(chalk.bold.bgBlack.cyan('Response Body'));
+      console.log(res.body);
 
-export interface CookieHeader {
+      return cookieHeader;
+    })
+
+}
+
+function getIndexAfterPostCredential(url: string, cookieHeader: string) {
+  return requestGET({ url: url, headers: { 'Cookie': cookieHeader } })
+    .map(res => {
+      console.log(chalk.green('Request Headers'));
+      console.log(res.res.request.headers);
+      console.log(chalk.green('Request Response Headers'));
+      console.log(res.res.headers);
+      console.log(chalk.bold.bgBlack.cyan('Response Body'));
+      console.log(res.body);
+      return res;
+
+    })
 
 }

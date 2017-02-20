@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "fuzzer": "node dist/bundle.js",
-    "test": "webpack && node dist/bundle test http://127.0.0.1 --custom-auth=dvwa",
+    "test": "webpack && node dist/bundle test http://127.0.0.1/dvwa --custom-auth=dvwa",
     "test2": "node dist/bundle test http://127.0.0.1/dvwa --custom-auth=dvwa"
   },
   "repository": {
