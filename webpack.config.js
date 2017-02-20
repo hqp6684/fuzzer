@@ -1,4 +1,5 @@
-var path = require('path'); var fs = require('fs');
+var path = require('path');
+var fs = require('fs');
 
 var nodeModules = {};
 fs.readdirSync('node_modules')
@@ -15,7 +16,7 @@ module.exports = {
     './src/main.ts'
   ],
   output: {
-    filename: '/bundle.js',
+    filename: '/fuzzer.js',
     path: './dist'
   },
   externals: nodeModules,

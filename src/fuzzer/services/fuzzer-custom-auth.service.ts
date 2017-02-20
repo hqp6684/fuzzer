@@ -18,6 +18,8 @@ export function fuzzerAuthenticator(config: FuzzerConfig) {
 
 
 function dvwaAuth(config: FuzzerConfig) {
+  console.log(chalk.bgBlack.cyan.bold('DVWA Custom Authentication'));
+
   let postTargetFile = './login.php';
   // this is hard-coded,
   // TODO: get this path from response header after post credential response headers['location']
@@ -44,17 +46,6 @@ function dvwaAuth(config: FuzzerConfig) {
     .subscribe(res => {
       console.log(chalk.bgBlack.cyan.bold('Finish'));
 
-      // console.log(cookieHeader);
-
-      // requestPOST({
-      //   url: postURL,
-      //   form: { 'username': 'admin', 'password': 'password', 'Login': 'Login' },
-      //   headers: { 'Cookie': cookieHeader }
-
-      // }).subscribe(res => {
-
-      // })
-
     })
 
 
@@ -63,15 +54,17 @@ function dvwaAuth(config: FuzzerConfig) {
 
 function getCookie(res: RequestResponse): Array<string> {
 
+  console.log(chalk.bgBlack.cyan.bold('Looking for Set-Cookie Header'));
   // extract cookie
-  let setCookie = res.res.headers['Set-Cookie']
   let headerKeys = Object.keys(res.res.headers);
   let cookieHeaderKeys = headerKeys.filter(header => new RegExp('cookie', 'g').test(header));
   let cookieHeader = res.res.headers[cookieHeaderKeys[0]];
+  console.log(chalk.yellow(cookieHeader));
   return cookieHeader;
 }
 
 function extractCookieHeader(header: Array<String>) {
+  console.log(chalk.bgBlack.cyan.bold('Extracting Set-Cookie Header'));
   let sid: string;
   let security: string;
   header.map(value => {
@@ -83,11 +76,11 @@ function extractCookieHeader(header: Array<String>) {
       if (subString.toLowerCase().indexOf('security') >= 0) {
         security = subString
       }
-
     })
   })
   let cookieHeader = [security, sid].join('; ')
 
+  console.log(chalk.yellow(cookieHeader));
   return cookieHeader;
 }
 
@@ -98,13 +91,7 @@ function postCredential(postURL: string, cookieHeader: string) {
     headers: { 'Cookie': cookieHeader }
   })
     .map(res => {
-      console.log(chalk.green('Request Headers'));
-      console.log(res.res.request.headers);
-      console.log(chalk.green('Request Response Headers'));
-      console.log(res.res.headers);
-      console.log(chalk.bold.bgBlack.cyan('Response Body'));
-      console.log(res.body);
-
+      printRes(res, postURL);
       return cookieHeader;
     })
 
@@ -113,14 +100,21 @@ function postCredential(postURL: string, cookieHeader: string) {
 function getIndexAfterPostCredential(url: string, cookieHeader: string) {
   return requestGET({ url: url, headers: { 'Cookie': cookieHeader } })
     .map(res => {
-      console.log(chalk.green('Request Headers'));
-      console.log(res.res.request.headers);
-      console.log(chalk.green('Request Response Headers'));
-      console.log(res.res.headers);
-      console.log(chalk.bold.bgBlack.cyan('Response Body'));
-      console.log(res.body);
+      printRes(res, url);
       return res;
 
     })
+}
 
+function printRes(res: RequestResponse, url?: string) {
+  if (url) {
+    console.log(chalk.bgBlack.bold.green('URL'));
+    console.log(chalk.blue(url));
+  }
+  console.log(chalk.green('Request Headers'));
+  console.log(res.res.request.headers);
+  console.log(chalk.green('Request Response Headers'));
+  console.log(res.res.headers);
+  console.log(chalk.bold.bgBlack.cyan('Response Body'));
+  console.log(res.body);
 }
