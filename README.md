@@ -6,7 +6,7 @@
     
 3> Run `node [fuzzer.js location] [discover | test ] url OPTIONS`
 
-    ie: node dist/fuzzer.js test http://127.0.0.1/dvwa --custom-auth=dvwa
+    ie: node dist/fuzzer.js test http://127.0.0.1/ --custom-auth=dvwa
 
  
 

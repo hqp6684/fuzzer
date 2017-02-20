@@ -135,8 +135,6 @@ function printRes(res: RequestResponse, url?: string, loggedIn?: boolean) {
   console.log(res.res.request.method);
   console.log(chalk.green('Request Headers'));
   console.log(res.res.request.headers);
-  console.log(chalk.bold.bgBlack.cyan('Request Form'));
-  console.log(res.res.request.form)
   console.log(chalk.green('Request Response Headers'));
   console.log(res.res.headers);
   console.log(chalk.green('Request Response Status Code'));
@@ -146,6 +144,8 @@ function printRes(res: RequestResponse, url?: string, loggedIn?: boolean) {
   console.log(chalk.bold.bgBlack.cyan('Response Body'));
   console.log(res.body);
   if (loggedIn) {
-    cheerio.load(res.body)('.message').html();
+    console.log(chalk.bgBlack.green.bold(
+      cheerio.load(res.body)('.message').html()
+    ))
   }
 }
