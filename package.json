@@ -7,7 +7,7 @@
     "build": "webpack",
     "fuzzer": "node dist/bundle.js",
     "test": "webpack && node dist/fuzzer test http://127.0.0.1/ --custom-auth=dvwa",
-    "discoverTest": "webpack && node dist/fuzzer discover http://127.0.0.1/ --custom-auth=dvwa --common-words=words.txt",
+    "discoverTest": "webpack && node dist/fuzzer discover http://127.0.0.1/ --custom-auth=dvwa --common-words=/words.txt",
     "test2": "node dist/fuzzer test http://127.0.0.1/dvwa --custom-auth=dvwa",
     "test3": "node dist/fuzzer discover http://127.0.0.1/ --common-words=words.txt",
     "test4": "node dist/fuzzer discover http://127.0.0.1/dvwa --custom-auth=dvwa --common-words=words.txt"
