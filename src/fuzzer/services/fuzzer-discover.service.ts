@@ -1,3 +1,4 @@
+import { queue } from 'rxjs/scheduler/queue';
 import { Observable } from 'rxjs/Rx';
 import { requestGET, RequestResponse } from './fuzzer-request.service';
 import { fuzzerAuthenticator } from './fuzzer-custom-auth.service';
@@ -8,6 +9,7 @@ import * as fs from 'fs';
 import * as readline from 'readline';
 import * as stream from 'stream';
 import * as cheerio from 'cheerio';
+import * as url from 'url';
 
 export function fuzzerDiscover(config: DiscoverConfig) {
   let _res: RequestResponse;
@@ -17,26 +19,20 @@ export function fuzzerDiscover(config: DiscoverConfig) {
     validateCommonWordsFile(config)
       .map(extractWords)
       .flatMap(fuzzerAuthenticator)
+      .map(pageDiscovery)
       // .map(arr=>{return})
       .subscribe(res => {
         console.log(res.res.statusCode);
-        pageDiscovery(res.body);
+        pageDiscovery(res);
       }, err => { console.log(err) })
 
-    // .map(<FuzzerConfig>fuzzerAuthenticator)
-    // fuzzerAuthenticator(config)
-    // .map()
-    // .subscribe(res => {
-    //   _res = res;
-    //   // isConfigValid(config);
-    // })
   } else {
     validateCommonWordsFile(config)
       .map(extractWords)
       .subscribe(config =>
         requestGET({ url: config.url }).subscribe(res => {
           console.log(res.res.statusMessage);
-          pageDiscovery(res.body);
+          pageDiscovery(res);
         }),
       err => { console.log(err) })
   }
@@ -70,14 +66,38 @@ function extractWords(config: DiscoverConfig): DiscoverConfig {
 
 
 
+function pageDiscovery(res: RequestResponse) {
+  console.log(chalk.bgBlack.bold.cyan('Page Discovery'));
+  linkDiscovery(res.body);
+  // let $ = cheerio.load(body);
+  return res;
 
-function pageDiscovery(body: string) {
+}
+
+
+function linkDiscovery(body: string) {
+  console.log(chalk.bgBlack.green('Link Discovery'));
   let $ = cheerio.load(body);
-  $('a').map((index, el) => {
+  let links = $('a');
+  console.log(chalk.yellow(`Discovered ${links.length}`));
+  links.map((index, el) => {
     console.log(el.tagName);
     console.log($(el).html());
     console.log(el.attribs);
+    parseUrl(el);
     console.log(chalk.yellow('------------------------------'));
   })
+}
 
+function pageGuessing(words: string[]) {
+
+}
+
+function parseUrl(el: CheerioElement) {
+  console.log(chalk.magenta('Parsing URL'));
+  if ((<any>el.attribs)['href']) {
+    let href = url.parse((<any>el.attribs)['href']);
+    console.log('Query string');
+    console.log(href.query);
+  }
 }
