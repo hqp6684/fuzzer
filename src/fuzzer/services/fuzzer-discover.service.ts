@@ -45,7 +45,7 @@ export function fuzzerDiscover(config: DiscoverConfig) {
 
 
 function validateCommonWordsFile(config: DiscoverConfig): Observable<DiscoverConfig> {
-  let commonWordsPath = path.resolve('./', 'input-files', config['common-words']);
+  let commonWordsPath = path.resolve(config['common-words']);
   if (fs.existsSync(commonWordsPath)) {
     console.log(chalk.green.bgBlack.bold('found '.concat(commonWordsPath)));
     config.commonWordsFilePath = commonWordsPath;
