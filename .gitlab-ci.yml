@@ -8,7 +8,7 @@ before_script:
     - service mysql restart
     - /mysql-setup.sh
     # do not change any of the statements in this section
-samsrunner:
+samsrunnerkjj:
   script:
     # here is where you can write your commands to run your fuzzer or any custom setup commands
     - echo "hello class"
@@ -16,6 +16,6 @@ samsrunner:
     - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
     - sudo apt-get install -y nodejs
     - npm install 
-    - npm run test
+    - npm run discoverTest
     # - npm run fuzzer
   stage: test

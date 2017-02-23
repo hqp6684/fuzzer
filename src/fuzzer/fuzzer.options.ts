@@ -14,6 +14,8 @@ export interface DiscoverConfig extends FuzzerConfig {
      * Newline-delimited file of common words to be used in page guessing and input guessing. Required
      */
     'common-words': string;
+    commonWordsFilePath?: string;
+    words?: string[];
 }
 export type DiscoverOption = keyof DiscoverConfig;
 

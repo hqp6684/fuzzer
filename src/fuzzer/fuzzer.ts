@@ -2,7 +2,7 @@ import { fuzzerDiscover } from './services/fuzzer-discover.service';
 import { fuzzerTest } from './services/fuzzer-test.service';
 import { isEmpty } from 'rxjs/operator/isEmpty';
 import { AsyncSubject } from 'rxjs/Rx';
-import { FuzzerConfig, FuzzerOption } from './fuzzer.options';
+import { DiscoverConfig, FuzzerConfig, FuzzerOption } from './fuzzer.options';
 import { requestGET, requestPOST, urlIsValid } from './services/fuzzer-request.service';
 import { FuzzerInputService } from './services/fuzzer-input.service';
 //https://github.com/cheeriojs/cheerio
@@ -48,7 +48,7 @@ export class Fuzzer {
                 fuzzerTest(this.config);
                 break;
             case 'discover':
-                fuzzerDiscover(this.config);
+                fuzzerDiscover(<DiscoverConfig>this.config);
                 break;
         }
 

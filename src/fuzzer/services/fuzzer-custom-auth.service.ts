@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/Rx';
 import { Cookie } from 'request';
 import { FuzzerConfig } from '../fuzzer.options';
 import * as url from 'url';
@@ -9,10 +10,11 @@ import { requestGET, requestPOST, RequestResponse, CoreOptions } from './fuzzer-
 
 
 
-export function fuzzerAuthenticator(config: FuzzerConfig) {
+export function fuzzerAuthenticator(config: FuzzerConfig): Observable<RequestResponse> {
   switch (config['custom-auth']) {
     case 'dvwa':
-      dvwaAuth(config);
+      return dvwaAuth(config);
+    default:
       break;
   }
 }
@@ -38,17 +40,17 @@ function dvwaAuth(config: FuzzerConfig) {
 
   let cookieHeader;
 
-  requestGET({ url: postURL })
+  return requestGET({ url: postURL })
     // .map(findLoginForm)
     // .map(getCookie)
     // .filter(header => header ? true : false)
     // .map(extractCookieHeader)
     .flatMap(res => postCredential(postURL, res))
     .flatMap(cookie => getIndexAfterPostCredential(getURL, cookie))
-    .subscribe(res => {
-      console.log(chalk.bgBlack.cyan.bold('Finish'));
+  // .subscribe(res => {
+  //   console.log(chalk.bgBlack.cyan.bold('Finish'));
 
-    })
+  // })
 
 
 
@@ -123,6 +125,8 @@ function getIndexAfterPostCredential(url: string, cookieHeader: string) {
   return requestGET({ url: url, headers: { 'Cookie': cookieHeader } })
     .map(res => {
       printRes(res, url, true);
+      res.cookie = cookieHeader;
+      return res;
     })
 }
 
@@ -142,7 +146,7 @@ function printRes(res: RequestResponse, url?: string, loggedIn?: boolean) {
   console.log(chalk.green('Request Response Status Message'));
   console.log(res.res.statusMessage);
   console.log(chalk.bold.bgBlack.cyan('Response Body'));
-  console.log(res.body);
+  // console.log(res.body);
   if (loggedIn) {
     console.log(chalk.bgBlack.green.bold(
       cheerio.load(res.body)('.message').html()

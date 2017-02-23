@@ -56,7 +56,7 @@ export function requestGET(options: CoreOptions): Observable<RequestResponse> {
   return obs(options).map(mapRequesResponse);
 }
 
-export function requestPOST(options: CoreOptions ): Observable<RequestResponse> {
+export function requestPOST(options: CoreOptions): Observable<RequestResponse> {
   let obs = Observable.bindCallback(request.post);
   // opts.url = 'sadf';
   return obs(options).map(mapRequesResponse);
@@ -66,6 +66,7 @@ export interface RequestResponse {
   err: Error;
   res: request.RequestResponse;
   body: string;
+  cookie?: string;
 }
 
 export interface CoreOptions extends request.CoreOptions {
