@@ -19,11 +19,12 @@ export function fuzzerDiscover(config: DiscoverConfig) {
     validateCommonWordsFile(config)
       .map(extractWords)
       .flatMap(fuzzerAuthenticator)
-      .map(pageDiscovery)
+      // .map(pageDiscovery)
       // .map(arr=>{return})
       .subscribe(res => {
         console.log(res.res.statusCode);
         pageDiscovery(res);
+        constructPageGuessingURLs(config);
       }, err => { console.log(err) })
 
   } else {
@@ -33,6 +34,7 @@ export function fuzzerDiscover(config: DiscoverConfig) {
         requestGET({ url: config.url }).subscribe(res => {
           console.log(res.res.statusMessage);
           pageDiscovery(res);
+          constructPageGuessingURLs(config);
         }),
       err => { console.log(err) })
   }
@@ -120,9 +122,7 @@ function formDiscovery(body: string) {
 
 function pageGuessing(body: string) {
   console.log(chalk.bgBlack.green('Page Guessing'));
-  let $ = cheerio.load(body);
-  let els = $('*');
-  els.map((index, el) => { })
+
 }
 
 function parseUrl(el: CheerioElement) {
@@ -150,6 +150,54 @@ function doesElemenetContainWord(word: string, el: CheerioElement) {
     }
   })
   return itDoes;
+}
+
+
+function constructPageGuessingURLs(config: DiscoverConfig): DiscoverConfig {
+  let extensions = ['php', 'html', 'htm', 'jsp', 'asp'];
+  let urls = Array<string>();
+
+  let rawUrl = url.parse(config.url);
+  let initialPath = rawUrl.pathname;
+
+
+  if (config.words.length > 0) {
+    let words = config.words;
+    words
+      .filter((val => val.length > 0))
+      .map((word, index) => {
+
+        if (rawUrl.pathname !== '/') {
+          urls.push(url.resolve(config.url, path.join(rawUrl.pathname, word)));
+          // extensions.map(extension => {
+          //   urls.push(
+          //     url.resolve(config.url, path.join(rawUrl.pathname,word.concat('.',extension)))
+          //   )
+          // })
+        } else {
+          urls.push(url.resolve(config.url, word));
+
+        }
+        extensions.map(extension => {
+          urls.push(
+            url.resolve(config.url, path.join(rawUrl.pathname, word.concat('.', extension)))
+          )
+        })
+
+
+      })
+    console.log(urls);
+
+
+  }
+  return null;
+
+}
+
+
+
+function joinExtention() {
+
 }
 
 
