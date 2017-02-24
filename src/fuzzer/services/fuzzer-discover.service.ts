@@ -36,7 +36,6 @@ export function fuzzerDiscover(config: DiscoverConfig) {
         }),
       err => { console.log(err) })
   }
-
 }
 
 
@@ -61,7 +60,6 @@ function extractWords(config: DiscoverConfig): DiscoverConfig {
   console.log(content);
   config.words = content;
   return config;
-
 }
 
 
@@ -69,6 +67,8 @@ function extractWords(config: DiscoverConfig): DiscoverConfig {
 function pageDiscovery(res: RequestResponse) {
   console.log(chalk.bgBlack.bold.cyan('Page Discovery'));
   linkDiscovery(res.body);
+  inputDiscovery(res.body);
+  formDiscovery(res.body);
   // let $ = cheerio.load(body);
   return res;
 
@@ -79,7 +79,7 @@ function linkDiscovery(body: string) {
   console.log(chalk.bgBlack.green('Link Discovery'));
   let $ = cheerio.load(body);
   let links = $('a');
-  console.log(chalk.yellow(`Discovered ${links.length}`));
+  console.log(chalk.yellow(`Discovered ${links.length} link(s)`));
   links.map((index, el) => {
     console.log(el.tagName);
     console.log($(el).html());
@@ -88,9 +88,40 @@ function linkDiscovery(body: string) {
     console.log(chalk.yellow('------------------------------'));
   })
 }
+function inputDiscovery(body: string) {
+  console.log(chalk.bgBlack.green('Input Discovery'));
+  let $ = cheerio.load(body);
+  let inputs = $('input');
+  console.log(chalk.yellow(`Discovered ${inputs.length} input(s)`));
+  inputs.map((index, el) => {
+    console.log(el.tagName);
+    console.log($(el).html());
+    console.log(el.attribs);
+    console.log(chalk.yellow('------------------------------'));
+  })
+}
 
-function pageGuessing(words: string[]) {
+function formDiscovery(body: string) {
+  console.log(chalk.bgBlack.green('Form Discovery'));
+  let $ = cheerio.load(body);
+  let forms = $('form');
+  console.log(chalk.yellow(`Discovered ${forms.length} form(s)`));
+  forms.map((index, el) => {
+    console.log(el.tagName);
+    console.log($(el).html());
+    console.log(el.attribs);
+    let rawHTMLForm = $(el).html();
+    inputDiscovery(rawHTMLForm);
+    console.log(chalk.yellow('------------------------------'));
+  })
+}
 
+
+function pageGuessing(body: string) {
+  console.log(chalk.bgBlack.green('Page Guessing'));
+  let $ = cheerio.load(body);
+  let els = $('*');
+  els.map((index, el) => { })
 }
 
 function parseUrl(el: CheerioElement) {
@@ -101,3 +132,23 @@ function parseUrl(el: CheerioElement) {
     console.log(href.query);
   }
 }
+
+function checkWordAgainstAttr(word: string, el: CheerioElement) {
+
+}
+
+
+function doesElemenetContainWord(word: string, el: CheerioElement) {
+  let keys = Object.keys(el.attribs);
+  let vals = Array<string>();
+  keys.map(key => { vals.push((<any>el.attribs)[key]) });
+  let itDoes = false;
+  vals.map(val => {
+    if (val === word) {
+      itDoes = true;
+    }
+  })
+  return itDoes;
+}
+
+

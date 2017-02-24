@@ -16,6 +16,9 @@ export interface DiscoverConfig extends FuzzerConfig {
     'common-words': string;
     commonWordsFilePath?: string;
     words?: string[];
+    pages?: string[];
+
+
 }
 export type DiscoverOption = keyof DiscoverConfig;
 
