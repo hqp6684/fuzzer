@@ -17,5 +17,6 @@ samsrunnerkjj:
     - sudo apt-get install -y nodejs
     - npm install 
     - npm run discoverTest
+    - npm run discoverTest2
     # - npm run fuzzer
   stage: test

@@ -81,6 +81,7 @@ function linkDiscovery(body: string) {
   let links = $('a');
   console.log(chalk.yellow(`Discovered ${links.length} link(s)`));
   links.map((index, el) => {
+    console.log(index);
     console.log(el.tagName);
     console.log($(el).html());
     console.log(el.attribs);

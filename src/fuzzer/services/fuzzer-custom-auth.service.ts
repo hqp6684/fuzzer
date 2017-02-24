@@ -41,10 +41,6 @@ function dvwaAuth(config: FuzzerConfig) {
   let cookieHeader;
 
   return requestGET({ url: postURL })
-    // .map(findLoginForm)
-    // .map(getCookie)
-    // .filter(header => header ? true : false)
-    // .map(extractCookieHeader)
     .flatMap(res => postCredential(postURL, res))
     .flatMap(cookie => getIndexAfterPostCredential(getURL, cookie))
   // .subscribe(res => {
@@ -99,9 +95,6 @@ function postCredential(postURL: string, res: RequestResponse) {
     name === 'user_token' ? user_token = $(input).attr('value') : user_token = undefined;
   })
 
-  // .map((index, el) => {
-  //   console.log(el.attribs);
-  // })
   let cookieHeader = extractCookieHeader(getCookie(res));
   let form = { 'username': 'admin', 'password': 'password', 'Login': 'Login' };
   if (user_token) {
