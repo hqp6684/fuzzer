@@ -123,9 +123,9 @@ function getIndexAfterPostCredential(url: string, cookieHeader: string) {
     })
 }
 
-function printRes(res: RequestResponse, url?: string, loggedIn?: boolean) {
+export function printRes(res: RequestResponse, url?: string, loggedIn?: boolean) {
   if (url) {
-    console.log(chalk.bgBlack.bold.green('URL'));
+    console.log(chalk.bgBlack.bold.green('----------====== URL ======----------'));
     console.log(chalk.blue(url));
   }
   console.log(chalk.green('Request Method'));

@@ -1,7 +1,7 @@
 import { queue } from 'rxjs/scheduler/queue';
 import { Observable } from 'rxjs/Rx';
-import { requestGET, RequestResponse } from './fuzzer-request.service';
-import { fuzzerAuthenticator } from './fuzzer-custom-auth.service';
+import { CoreOptions, requestGET, RequestResponse } from './fuzzer-request.service';
+import { fuzzerAuthenticator, printRes } from './fuzzer-custom-auth.service';
 import { DiscoverConfig, FuzzerConfig } from '../fuzzer.options';
 import * as chalk from 'chalk';
 import * as path from 'path';
@@ -19,12 +19,11 @@ export function fuzzerDiscover(config: DiscoverConfig) {
     validateCommonWordsFile(config)
       .map(extractWords)
       .flatMap(fuzzerAuthenticator)
-      // .map(pageDiscovery)
-      // .map(arr=>{return})
       .subscribe(res => {
         console.log(res.res.statusCode);
         pageDiscovery(res);
-        constructPageGuessingURLs(config);
+        constructPageDiscoveryURLs(config);
+        pageGuessor(config);
       }, err => { console.log(err) })
 
   } else {
@@ -34,7 +33,8 @@ export function fuzzerDiscover(config: DiscoverConfig) {
         requestGET({ url: config.url }).subscribe(res => {
           console.log(res.res.statusMessage);
           pageDiscovery(res);
-          constructPageGuessingURLs(config);
+          constructPageDiscoveryURLs(config);
+          pageGuessor(config);
         }),
       err => { console.log(err) })
   }
@@ -56,7 +56,6 @@ function validateCommonWordsFile(config: DiscoverConfig): Observable<DiscoverCon
 
 
 function extractWords(config: DiscoverConfig): DiscoverConfig {
-  //  let insteam = fs.createReadStream(config.commonWordsFilePath, {encoding: 'utf8'}).pipe(split())
   console.log(chalk.bgBlack.cyan('Extracting common words'));
   let content = fs.readFileSync(config.commonWordsFilePath).toString().split('\n');
   console.log(content);
@@ -120,11 +119,6 @@ function formDiscovery(body: string) {
 }
 
 
-function pageGuessing(body: string) {
-  console.log(chalk.bgBlack.green('Page Guessing'));
-
-}
-
 function parseUrl(el: CheerioElement) {
   console.log(chalk.magenta('Parsing URL'));
   if ((<any>el.attribs)['href']) {
@@ -134,28 +128,12 @@ function parseUrl(el: CheerioElement) {
   }
 }
 
-function checkWordAgainstAttr(word: string, el: CheerioElement) {
-
-}
 
 
-function doesElemenetContainWord(word: string, el: CheerioElement) {
-  let keys = Object.keys(el.attribs);
-  let vals = Array<string>();
-  keys.map(key => { vals.push((<any>el.attribs)[key]) });
-  let itDoes = false;
-  vals.map(val => {
-    if (val === word) {
-      itDoes = true;
-    }
-  })
-  return itDoes;
-}
-
-
-function constructPageGuessingURLs(config: DiscoverConfig): DiscoverConfig {
+function constructPageDiscoveryURLs(config: DiscoverConfig): DiscoverConfig {
   let extensions = ['php', 'html', 'htm', 'jsp', 'asp'];
   let urls = Array<string>();
+
 
   let rawUrl = url.parse(config.url);
   let initialPath = rawUrl.pathname;
@@ -169,35 +147,39 @@ function constructPageGuessingURLs(config: DiscoverConfig): DiscoverConfig {
 
         if (rawUrl.pathname !== '/') {
           urls.push(url.resolve(config.url, path.join(rawUrl.pathname, word)));
-          // extensions.map(extension => {
-          //   urls.push(
-          //     url.resolve(config.url, path.join(rawUrl.pathname,word.concat('.',extension)))
-          //   )
-          // })
         } else {
           urls.push(url.resolve(config.url, word));
-
         }
         extensions.map(extension => {
           urls.push(
             url.resolve(config.url, path.join(rawUrl.pathname, word.concat('.', extension)))
           )
         })
-
-
       })
-    console.log(urls);
-
-
+    // console.log(urls);
   }
-  return null;
+  config.potentialUrls = urls;
+  return config;
+}
 
+function pageGuessor(config: DiscoverConfig, header?: any) {
+  if (!config.potentialUrls) return;
+  config.potentialUrls.map(potentialUrl => {
+    let options: CoreOptions = { url: potentialUrl };
+
+    if (header) {
+      options.headers = { 'Cookie': header };
+    }
+    requestGET(options)
+      .subscribe(res => {
+        printRes(res, potentialUrl);
+        pageDiscovery(res);
+      })
+
+  })
+  return config;
 }
 
 
-
-function joinExtention() {
-
-}
 
 
