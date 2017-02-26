@@ -20,7 +20,6 @@ export function fuzzerDiscover(config: DiscoverConfig) {
       .map(extractWords)
       .flatMap(fuzzerAuthenticator)
       .subscribe(res => {
-        console.log(res.res.statusCode);
         pageDiscovery(res);
         constructPageDiscoveryURLs(config);
         pageGuessor(config);
@@ -179,7 +178,8 @@ function pageGuessor(config: DiscoverConfig, header?: any) {
     requestGET(options)
       .subscribe(res => {
         printRes(res, potentialUrl);
-        pageDiscovery(res);
+        if (res.res.statusCode !== 404)
+          pageDiscovery(res);
       })
 
   })
