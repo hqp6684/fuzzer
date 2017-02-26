@@ -125,9 +125,9 @@ function getIndexAfterPostCredential(url: string, cookieHeader: string) {
 
 export function printRes(res: RequestResponse, url?: string, loggedIn?: boolean) {
   if (url) {
-    console.log(chalk.bgBlack.bold.green('----------====== URL ======----------'));
-    console.log(chalk.blue(url));
+    console.log(chalk.bgBlack.cyan.bold(`-----------------------------------==== ${url} ====-----------------------------------`));
   }
+  console.log(`-----------------------------------===== REQUEST RESPONSE ======-----------------------------------`)
   console.log(chalk.green('Request Method'));
   console.log(res.res.request.method);
   console.log(chalk.green('Request Headers'));
@@ -145,4 +145,6 @@ export function printRes(res: RequestResponse, url?: string, loggedIn?: boolean)
       cheerio.load(res.body)('.message').html()
     ))
   }
+  console.log(`-----------------------------------==== END REQUEST RESPONSE ====-----------------------------------`)
+
 }

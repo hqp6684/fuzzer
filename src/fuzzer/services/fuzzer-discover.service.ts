@@ -77,45 +77,51 @@ function pageDiscovery(res: RequestResponse) {
 
 
 function linkDiscovery(body: string) {
-  console.log(chalk.bgBlack.green('Link Discovery'));
+  printLineBreak();
+  printHeader('Link Discovery')
   let $ = cheerio.load(body);
   let links = $('a');
   console.log(chalk.yellow(`Discovered ${links.length} link(s)`));
   links.map((index, el) => {
-    console.log(index);
+    printHeader(`Link ${index + 1}`);
     console.log(el.tagName);
     console.log($(el).html());
     console.log(el.attribs);
     parseUrl(el);
-    console.log(chalk.yellow('------------------------------'));
+    printFooter();
   })
 }
 function inputDiscovery(body: string) {
-  console.log(chalk.bgBlack.green('Input Discovery'));
+  printLineBreak();
+  printHeader('Input Discovery');
   let $ = cheerio.load(body);
   let inputs = $('input');
-  console.log(chalk.yellow(`Discovered ${inputs.length} input(s)`));
+  printHeader(`Discovered ${inputs.length} input(s)`);
   inputs.map((index, el) => {
+    printHeader(`Input ${index + 1}`)
     console.log(el.tagName);
     console.log($(el).html());
     console.log(el.attribs);
-    console.log(chalk.yellow('------------------------------'));
+    printFooter();
   })
 }
 
 function formDiscovery(body: string) {
-  console.log(chalk.bgBlack.green('Form Discovery'));
+  printLineBreak();
+  printHeader('Form Discovery')
   let $ = cheerio.load(body);
   let forms = $('form');
   console.log(chalk.yellow(`Discovered ${forms.length} form(s)`));
   forms.map((index, el) => {
+    printHeader(`Form ${index + 1}`);
     console.log(el.tagName);
-    console.log($(el).html());
     console.log(el.attribs);
     let rawHTMLForm = $(el).html();
     inputDiscovery(rawHTMLForm);
-    console.log(chalk.yellow('------------------------------'));
+    printLineBreak();
   })
+  printFooter();
+
 }
 
 
@@ -183,3 +189,11 @@ function pageGuessor(config: DiscoverConfig, header?: any) {
 
 
 
+function printHeader(header: string) {
+  console.log(chalk.bgBlack.cyan.bold(`-----------------------------------==== ${header} ====-----------------------------------`));
+}
+function printFooter() {
+  console.log(`-----------------------------------==== END ====-----------------------------------`)
+}
+function printLineBreak() {
+}
