@@ -14,7 +14,8 @@ export function fuzzerTest(config: TestConfig) {
       .map(extractVectors)
       .flatMap(validateSensitiveFile)
       .map(extractSensitive)
-      .subscribe(config => {
+      .flatMap(fuzzerAuthenticator)
+      .subscribe(res => {
 
       })
     // .subscribe(config => {

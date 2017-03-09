@@ -15,6 +15,7 @@ export function fuzzerAuthenticator(config: FuzzerConfig): Observable<RequestRes
     case 'dvwa':
       return dvwaAuth(config);
     default:
+      console.log('TBD, only support dvwa at the moment')
       break;
   }
 }
@@ -24,19 +25,21 @@ function dvwaAuth(config: FuzzerConfig) {
   console.log(chalk.bgBlack.cyan.bold('DVWA Custom Authentication'));
 
   let postTargetFile = './login.php';
+
   // this is hard-coded,
   // TODO: get this path from response header after post credential response headers['location']
   let indexAfterPostCredentialTargetFile = './index.php';
 
   let configURL = url.parse(config.url);
   let basePath = configURL.pathname;
-  let postTargetPath = path.resolve(basePath, postTargetFile);
+  // let postTargetPath = path.resolve(basePath, postTargetFile);
+  let postTargetPath = url.resolve(config.url, postTargetFile);
+
   // path to get inddex file after login
   let indexAfterPostCredentialTargetPath = path.resolve(basePath, indexAfterPostCredentialTargetFile);
 
   let postURL = url.resolve(config.url, postTargetPath);
   let getURL = url.resolve(config.url, indexAfterPostCredentialTargetPath);
-  // console.log(postURL);
 
   let cookieHeader;
 
