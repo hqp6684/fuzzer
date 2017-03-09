@@ -16,6 +16,7 @@ samsrunnerkjj:
     - echo "hello class"
     - touch /sensitive.txt
     - echo "MySQL" >> /sensitive.txt
+    - echo "<pre>" >> /sensitive.txt
 #    - ruby fuzzer.rb discover http://localhost/ --custom-auth=dvwa
     - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
     - sudo apt-get install -y nodejs
