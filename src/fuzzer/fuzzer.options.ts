@@ -29,6 +29,8 @@ export interface TestConfig extends FuzzerConfig {
      */
     vectors: string;
     vectorsFilePath?: string;
+    vectorArray?: Array<string>;
+
     /**
      *--sensitive=file 
      * Newline-delimited file data that should never be leaked. It's assumed that
@@ -37,6 +39,7 @@ export interface TestConfig extends FuzzerConfig {
      */
     sensitive: string;
     sensitiveFilePath?: string;
+    sensitiveArray?: string[];
     /**
      * --random=[true|false]  
      * When off, try each input to each page systematically.  

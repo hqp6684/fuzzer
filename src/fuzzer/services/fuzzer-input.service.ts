@@ -89,10 +89,9 @@ export class FuzzerInputService {
       } else {
         raiseInputError(rawOpt);
       }
-      console.log(chalk.bold.yellow(`Entered :`));
-      console.log(config);
     })
-
+    console.log(chalk.bold.yellow(`Entered :`));
+    console.log(config);
   }
 
 

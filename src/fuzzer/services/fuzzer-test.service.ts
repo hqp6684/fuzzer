@@ -5,12 +5,29 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as chalk from 'chalk';
 
-export function fuzzerTest(config: FuzzerConfig) {
+export function fuzzerTest(config: TestConfig) {
 
   console.log(chalk.bgBlack.cyan.bold('Fuzzer Test '));
   if (config['custom-auth']) {
-    fuzzerAuthenticator(config);
+    // fuzzerAuthenticator(config)
+    validateVectorsFile(config)
+      .map(extractVectors)
+      .flatMap(validateSensitiveFile)
+      .map(extractSensitive)
+      .subscribe(config => {
+
+      })
+    // .subscribe(config => {
+    //   validateSensitiveFile(config)
+    //     .map(extractSensitive);
+    // })
+
   } else {
+    validateVectorsFile(config)
+      .map(extractVectors)
+      .subscribe(config => {
+        validateSensitiveFile(config).map(extractSensitive);
+      })
 
   }
 
@@ -28,16 +45,32 @@ export function fuzzerTest(config: FuzzerConfig) {
     }
   }
 
+  function extractVectors(config: TestConfig) {
+    console.log(chalk.bgBlack.cyan('Extracting vectors from input'));
+    let content = fs.readFileSync(config.vectorsFilePath).toString().split('\n');
+    console.log(content);
+    config.vectorArray = content;
+    return config;
+  }
+
+
   function validateSensitiveFile(config: TestConfig): Observable<TestConfig> {
     let sensitiveFilePath = path.resolve(config['sensitive']);
     if (fs.existsSync(sensitiveFilePath)) {
       console.log(chalk.green.bgBlack.bold('found '.concat(sensitiveFilePath)));
-      config.vectorsFilePath = sensitiveFilePath;
+      config.sensitiveFilePath = sensitiveFilePath;
       return Observable.of(config);
     } else {
       console.log(chalk.red.bgBlack.bold('404 not found : '.concat(sensitiveFilePath)));
       return Observable.throw(new Error('404'));
     }
+  }
+  function extractSensitive(config: TestConfig) {
+    console.log(chalk.bgBlack.cyan('Extracting vectors from input'));
+    let content = fs.readFileSync(config.sensitiveFilePath).toString().split('\n');
+    console.log(content);
+    config.sensitiveArray = content;
+    return config;
   }
 
 

@@ -1,7 +1,7 @@
 image: andymeneely/swen331fuzzer
 before_script:
-    - cat /vectors.txt
-    - cat /sensitive.txt
+    # - cat /vectors.txt
+    # - cat /sensitive.txt
     # do not change any of the statements in this section
     - service apache2 start
     - mysql_install_db --user=mysql -ldata=/var/lib/mysql
@@ -14,12 +14,14 @@ samsrunnerkjj:
   script:
     # here is where you can write your commands to run your fuzzer or any custom setup commands
     - echo "hello class"
+    - touch /sensitive.txt
+    - echo "MySQL" >> /sensitive.txt
 #    - ruby fuzzer.rb discover http://localhost/ --custom-auth=dvwa
     - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
     - sudo apt-get install -y nodejs
     - npm install 
-    - npm run discoverTest
-    - npm run discoverTest2
-    # - npm run test
+    # - npm run discoverTest
+    # - npm run discoverTest2
+    - npm run testTest
     # - npm run fuzzer
   stage: test
