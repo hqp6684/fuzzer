@@ -28,6 +28,7 @@ export interface TestConfig extends FuzzerConfig {
      * Newline-delimited file of common exploits to vulnerabilities. Required.
      */
     vectors: string;
+    vectorsFilePath?: string;
     /**
      *--sensitive=file 
      * Newline-delimited file data that should never be leaked. It's assumed that
@@ -35,6 +36,7 @@ export interface TestConfig extends FuzzerConfig {
      * reported in any response. Required.
      */
     sensitive: string;
+    sensitiveFilePath?: string;
     /**
      * --random=[true|false]  
      * When off, try each input to each page systematically.  

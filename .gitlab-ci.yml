@@ -1,6 +1,7 @@
 image: andymeneely/swen331fuzzer
 before_script:
     - cat /vectors.txt
+    - cat /sensitive.txt
     # do not change any of the statements in this section
     - service apache2 start
     - mysql_install_db --user=mysql -ldata=/var/lib/mysql
@@ -19,5 +20,6 @@ samsrunnerkjj:
     - npm install 
     - npm run discoverTest
     - npm run discoverTest2
+    # - npm run test
     # - npm run fuzzer
   stage: test
