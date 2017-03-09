@@ -33,12 +33,12 @@ function dvwaAuth(config: FuzzerConfig) {
   let configURL = url.parse(config.url);
   let basePath = configURL.pathname;
   // let postTargetPath = path.resolve(basePath, postTargetFile);
-  let postTargetPath = url.resolve(config.url, postTargetFile);
+  // let postTargetPath = url.resolve(config.url, postTargetFile);
 
   // path to get inddex file after login
   let indexAfterPostCredentialTargetPath = path.resolve(basePath, indexAfterPostCredentialTargetFile);
 
-  let postURL = url.resolve(config.url, postTargetPath);
+  let postURL = url.resolve(config.url, postTargetFile);
   let getURL = url.resolve(config.url, indexAfterPostCredentialTargetPath);
 
   let cookieHeader;
