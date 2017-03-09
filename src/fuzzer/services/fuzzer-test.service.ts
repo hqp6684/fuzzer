@@ -1,3 +1,4 @@
+import { CoreOptions, requestGET, RequestResponse } from './fuzzer-request.service';
 import { fuzzerAuthenticator } from './fuzzer-custom-auth.service';
 import { FuzzerConfig, TestConfig } from '../fuzzer.options';
 import { Observable } from 'rxjs';
@@ -31,6 +32,34 @@ export function fuzzerTest(config: TestConfig) {
       })
 
   }
+  /**
+   * 
+   * @param config TestConfig
+   * @param customAuthRes response contains cookie
+   */
+  function getBody(config: TestConfig, customAuthRes?: RequestResponse) {
+
+    let requestConfig: CoreOptions = { url: config.url };
+    if (customAuthRes) {
+      requestConfig = { url: config.url, headers: { 'Cookie': customAuthRes.cookie } };
+      requestGET(requestConfig).subscribe(res => {
+        console.log(res.body);
+      })
+    } else {
+      requestGET(requestConfig).subscribe(res => {
+        console.log(res.body);
+      })
+
+    }
+
+  }
+
+
+
+
+
+
+
 
 
 
