@@ -42,6 +42,7 @@ function dvwaAuth(config: FuzzerConfig) {
   let getURL = url.resolve(config.url, indexAfterPostCredentialTargetPath);
 
   let cookieHeader;
+  console.log(postURL);
 
   return requestGET({ url: postURL })
     .flatMap(res => postCredential(postURL, res))
@@ -89,6 +90,7 @@ function extractCookieHeader(header: Array<String>) {
 }
 
 function postCredential(postURL: string, res: RequestResponse) {
+  console.log(res);
   // security level = impossible
   let user_token: string;
   let $ = cheerio.load(res.body);
