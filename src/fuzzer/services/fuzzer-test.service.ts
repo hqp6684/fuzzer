@@ -92,7 +92,7 @@ export function fuzzerTest(config: TestConfig) {
             printHeader(`VECTOR ${index} = ${vector}  `);
             printRes(res, queryString, false, thisTaskTime);
             checkSanitization(config, res, queryString, formIndex, vector);
-            // checkSensitive();
+            checkSensitive(config, res);
           })
       } else {
         testFormMethodGET(config, queryString)
@@ -101,8 +101,8 @@ export function fuzzerTest(config: TestConfig) {
             let thisTaskTime = howLong(time);
             printHeader(`VECTOR ${index} = ${vector}  `);
             printRes(res, queryString, false, thisTaskTime);
-            // checkSensitive()j
-            // checkSensitive();
+            checkSanitization(config, res, queryString, formIndex, vector);
+            checkSensitive(config, res);
 
           })
 
@@ -159,8 +159,23 @@ export function fuzzerTest(config: TestConfig) {
 
 
   }
-  function checkSensitive(config: TestConfig) {
-    console.log('TODO SENSITIVE')
+  function checkSensitive(config: TestConfig, res: RequestResponse) {
+    console.log('CHECK SENSITIVE DATA')
+    config.sensitiveArray.map((value, index) => {
+      printHeader(`Sensitive Data ${index} = ${value}`);
+      let lines: string[] = [];
+      res.body.split('\n').map((line) => {
+        if (line.indexOf(value) > -1) {
+          lines.push(line);
+        }
+      })
+      if (lines.length > 0) {
+        console.log(`Found ${lines.length} line(s)`)
+        lines.map(line => { console.log(line) });
+      } else {
+        console.log('No sensitive data found');
+      }
+    })
 
   }
 
