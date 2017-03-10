@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as chalk from 'chalk';
+import * as url from 'url';
+import * as querystring from 'querystring';
 import * as cheerio from 'cheerio';
 
 export function fuzzerTest(config: TestConfig) {
@@ -90,7 +92,7 @@ export function fuzzerTest(config: TestConfig) {
             printHeader(`VECTOR ${index} = ${vector}  `);
             printRes(res, queryString, false, thisTaskTime);
             checkSanitization(config, res, queryString, formIndex, vector);
-            checkSensitive();
+            // checkSensitive();
           })
       } else {
         testFormMethodGET(config, queryString)
@@ -99,8 +101,8 @@ export function fuzzerTest(config: TestConfig) {
             let thisTaskTime = howLong(time);
             printHeader(`VECTOR ${index} = ${vector}  `);
             printRes(res, queryString, false, thisTaskTime);
-            checkSensitive();
-            checkSensitive();
+            // checkSensitive()j
+            // checkSensitive();
 
           })
 
@@ -109,7 +111,7 @@ export function fuzzerTest(config: TestConfig) {
     })
   }
 
-  function generateQueryString($: CheerioStatic, form: CheerioElement, vector?: string) {
+  function generateQueryString($: CheerioStatic, form: CheerioElement, vector?: string, printAfter?: boolean) {
     let values = Array<string>();
     $(form).find('input').map((index, el) => {
       if ($(el).attr('value')) {
@@ -139,20 +141,25 @@ export function fuzzerTest(config: TestConfig) {
   function checkSanitization(config: TestConfig, res: RequestResponse, originalQueryString: string, formIndex: number, vector: string) {
     console.log('CHECK SANITIZATION')
     let $ = cheerio.load(res.body);
-    let forms = $('form').map((index, el) => {
+    let forms = $('form').map((index, form) => {
       if (index === formIndex) {
-        printHeader('BEFORE');
+        printHeader('Query String Before');
         console.log(originalQueryString);
-        printHeader('AFTER');
-        console.log(generateQueryString($, el))
-        console.log(`Index of vector is : ${originalQueryString.indexOf(vector)}`)
+        console.log(url.parse(originalQueryString))
+        console.log('Returned Form');
+        console.log($(form).html());
+        printHeader('Query String After');
+        let afterQueryString = generateQueryString($, form);
+        console.log(afterQueryString);
+        console.log(`Index of vector is : ${afterQueryString.indexOf(vector)}`)
+
       }
     })
 
 
 
   }
-  function checkSensitive() {
+  function checkSensitive(config: TestConfig) {
     console.log('TODO SENSITIVE')
 
   }
