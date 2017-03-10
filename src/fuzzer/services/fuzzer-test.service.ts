@@ -1,3 +1,4 @@
+import { formDiscovery } from './fuzzer-discover.service';
 import { AsyncSubject } from 'rxjs/Rx';
 import { CoreOptions, requestGET, RequestResponse } from './fuzzer-request.service';
 import { fuzzerAuthenticator } from './fuzzer-custom-auth.service';
@@ -41,13 +42,49 @@ export function fuzzerTest(config: TestConfig) {
 
   function runTest(config: TestConfig, res?: RequestResponse) {
     if (res) {
-      let body = getBody(config, res);
+      getBody(config, res).subscribe(body => {
+        discoverForm(body);
+
+      })
 
     } else {
-      let body = getBody(config);
+      getBody(config).subscribe(body => {
+        discoverForm(body);
+
+      })
     }
 
   }
+
+
+
+
+
+  function discoverForm(body: string) {
+    formDiscovery(body);
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /**
    * 
    * @param config TestConfig

@@ -90,7 +90,7 @@ function linkDiscovery(body: string) {
     printFooter();
   })
 }
-function inputDiscovery(body: string) {
+export function inputDiscovery(body: string) {
   printLineBreak();
   printHeader('Input Discovery');
   let $ = cheerio.load(body);
@@ -105,7 +105,7 @@ function inputDiscovery(body: string) {
   })
 }
 
-function formDiscovery(body: string) {
+export function formDiscovery(body: string) {
   printLineBreak();
   printHeader('Form Discovery')
   let $ = cheerio.load(body);
