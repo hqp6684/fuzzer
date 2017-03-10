@@ -120,6 +120,7 @@ export function formDiscovery(body: string) {
     printLineBreak();
   })
   printFooter();
+  return forms;
 
 }
 
@@ -189,11 +190,12 @@ function pageGuessor(config: DiscoverConfig, header?: any) {
 
 
 
-function printHeader(header: string) {
+export function printHeader(header: string) {
   console.log(chalk.bgBlack.cyan.bold(`-----------------------------------==== ${header} ====-----------------------------------`));
 }
-function printFooter() {
+export function printFooter() {
   console.log(`-----------------------------------==== END ====-----------------------------------`)
 }
-function printLineBreak() {
+export function printLineBreak() {
+  console.log('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||');
 }

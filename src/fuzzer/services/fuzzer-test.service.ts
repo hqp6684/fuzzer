@@ -1,12 +1,13 @@
-import { formDiscovery } from './fuzzer-discover.service';
+import { formDiscovery, printHeader } from './fuzzer-discover.service';
 import { AsyncSubject } from 'rxjs/Rx';
 import { CoreOptions, requestGET, RequestResponse } from './fuzzer-request.service';
-import { fuzzerAuthenticator } from './fuzzer-custom-auth.service';
+import { fuzzerAuthenticator, printRes } from './fuzzer-custom-auth.service';
 import { FuzzerConfig, TestConfig } from '../fuzzer.options';
 import { Observable } from 'rxjs';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as chalk from 'chalk';
+import * as cheerio from 'cheerio';
 
 export function fuzzerTest(config: TestConfig) {
 
@@ -43,13 +44,14 @@ export function fuzzerTest(config: TestConfig) {
   function runTest(config: TestConfig, res?: RequestResponse) {
     if (res) {
       getBody(config, res).subscribe(body => {
-        discoverForm(body);
+        testForms(config, body);
+
 
       })
 
     } else {
       getBody(config).subscribe(body => {
-        discoverForm(body);
+        testForms(config, body);
 
       })
     }
@@ -57,18 +59,69 @@ export function fuzzerTest(config: TestConfig) {
   }
 
 
+  function testForms(config: TestConfig, body: string) {
+    let $ = cheerio.load(body);
+    let forms = $('form');
+    forms.map((index, form) => {
+      printHeader(`FORM ${index}`)
+      console.log($(form).html());
+      printHeader('--');
+      testVector(config, $, form, index);
+    });
+
+  }
+
+  function testVector(config: TestConfig, $: CheerioStatic, form: CheerioElement, formIndex: number) {
+    config.vectorArray.map((vector, index) => {
+      printHeader(`VECTOR ${index} = ${vector}  `);
+      let values = Array<string>();
 
 
+      $(form).find('input').map((index, el) => {
+        if ($(el).attr('value')) {
+          values.push($(el).attr('name').concat($(el).attr('value')));
+        }
+      });
+      let time = 0;
+      let start = timer();
+      let queryString = '?'.concat(values.join('&'));
+      testFormMethodGET(config, queryString)
+        .subscribe(res => {
+          time += timer() - start;
+          let thisTaskTime = howLong(time);
+          printRes(res, queryString, false, thisTaskTime);
+          checkSensitive();
+          checkSensitive();
 
-  function discoverForm(body: string) {
-    formDiscovery(body);
+        })
 
+    })
+
+
+  }
+  function testFormMethodGET(config: TestConfig, queryString: string) {
+    return requestGET({ url: config.url.concat(queryString) })
+
+  }
+
+  function testFormMethodPOST() {
+
+  }
+
+  function checkSanitization() {
+    console.log('TODO SANITIZATION')
+
+  }
+  function checkSensitive() {
+    console.log('TODO SENSITIVE')
 
   }
 
 
-
-
+  let timer = Date.now.bind(Date);
+  function howLong(time: number) {
+    return (Math.floor(time * 100) / 100) + 'ms';
+  }
 
 
 

@@ -42,8 +42,6 @@ function dvwaAuth(config: FuzzerConfig) {
   let getURL = url.resolve(config.url, indexAfterPostCredentialTargetPath);
 
   let cookieHeader;
-  console.log(postURL);
-
   return requestGET({ url: postURL })
     .flatMap(res => postCredential(postURL, res))
     .flatMap(cookie => getIndexAfterPostCredential(getURL, cookie))
@@ -90,7 +88,6 @@ function extractCookieHeader(header: Array<String>) {
 }
 
 function postCredential(postURL: string, res: RequestResponse) {
-  console.log(res);
   // security level = impossible
   let user_token: string;
   let $ = cheerio.load(res.body);
@@ -105,7 +102,7 @@ function postCredential(postURL: string, res: RequestResponse) {
   if (user_token) {
     (<any>form)['user_token'] = user_token;
   }
-  console.log(form);
+  // console.log(form);
 
   return requestPOST({
     url: postURL,
@@ -128,7 +125,7 @@ function getIndexAfterPostCredential(url: string, cookieHeader: string) {
     })
 }
 
-export function printRes(res: RequestResponse, url?: string, loggedIn?: boolean) {
+export function printRes(res: RequestResponse, url?: string, loggedIn?: boolean, time?: string) {
   if (url) {
     console.log(chalk.bgBlack.cyan.bold(`-----------------------------------==== ${url} ====-----------------------------------`));
   }
@@ -149,6 +146,10 @@ export function printRes(res: RequestResponse, url?: string, loggedIn?: boolean)
     console.log(chalk.bgBlack.green.bold(
       cheerio.load(res.body)('.message').html()
     ))
+  }
+  if (time) {
+    console.log(`-----------------------------------==== TOOK ${time} ====-----------------------------------`)
+
   }
   console.log(`-----------------------------------==== END REQUEST RESPONSE ====-----------------------------------`)
 
