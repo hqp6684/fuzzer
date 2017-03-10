@@ -112,7 +112,7 @@ export function fuzzerTest(config: TestConfig) {
     let values = Array<string>();
     $(form).find('input').map((index, el) => {
       if ($(el).attr('value')) {
-        values.push($(el).attr('name').concat($(el).attr('value')));
+        values.push($(el).attr('name').concat('=', $(el).attr('value')));
       }
     });
     let queryString = '?'.concat(values.join('&'));
