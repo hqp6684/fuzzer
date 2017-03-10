@@ -79,8 +79,7 @@ export function fuzzerTest(config: TestConfig) {
 
   function testVector(config: TestConfig, $: CheerioStatic, form: CheerioElement, formIndex: number, resWithCookie?: RequestResponse) {
     config.vectorArray.map((vector, index) => {
-      printHeader(`VECTOR ${index} = ${vector}  `);
-      let queryString = generateQueryString($, form);
+      let queryString = generateQueryString($, form, vector);
       let time = 0;
       let start = timer();
       if (resWithCookie) {
@@ -88,6 +87,7 @@ export function fuzzerTest(config: TestConfig) {
           .subscribe(res => {
             time += timer() - start;
             let thisTaskTime = howLong(time);
+            printHeader(`VECTOR ${index} = ${vector}  `);
             printRes(res, queryString, false, thisTaskTime);
             checkSanitization(config, res, queryString, formIndex, vector);
             checkSensitive();
@@ -97,6 +97,7 @@ export function fuzzerTest(config: TestConfig) {
           .subscribe(res => {
             time += timer() - start;
             let thisTaskTime = howLong(time);
+            printHeader(`VECTOR ${index} = ${vector}  `);
             printRes(res, queryString, false, thisTaskTime);
             checkSensitive();
             checkSensitive();
@@ -108,11 +109,16 @@ export function fuzzerTest(config: TestConfig) {
     })
   }
 
-  function generateQueryString($: CheerioStatic, form: CheerioElement) {
+  function generateQueryString($: CheerioStatic, form: CheerioElement, vector?: string) {
     let values = Array<string>();
     $(form).find('input').map((index, el) => {
       if ($(el).attr('value')) {
         values.push($(el).attr('name').concat('=', $(el).attr('value')));
+      } else {
+        if (vector) {
+          values.push($(el).attr('name').concat('=', $(el).attr(vector)));
+        }
+
       }
     });
     let queryString = '?'.concat(values.join('&'));
