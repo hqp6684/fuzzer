@@ -44,7 +44,7 @@ export function fuzzerTest(config: TestConfig) {
   function runTest(config: TestConfig, res?: RequestResponse) {
     if (res) {
       getBody(config, res).subscribe(body => {
-        testForms(config, body);
+        testForms(config, body, res);
 
 
       })
@@ -59,19 +59,25 @@ export function fuzzerTest(config: TestConfig) {
   }
 
 
-  function testForms(config: TestConfig, body: string) {
+  function testForms(config: TestConfig, body: string, resWithCookie?: RequestResponse) {
     let $ = cheerio.load(body);
     let forms = $('form');
     forms.map((index, form) => {
       printHeader(`FORM ${index}`)
       console.log($(form).html());
       printHeader('--');
-      testVector(config, $, form, index);
+      if (resWithCookie) {
+
+        testVector(config, $, form, index, resWithCookie);
+      } else {
+
+        testVector(config, $, form, index);
+      }
     });
 
   }
 
-  function testVector(config: TestConfig, $: CheerioStatic, form: CheerioElement, formIndex: number) {
+  function testVector(config: TestConfig, $: CheerioStatic, form: CheerioElement, formIndex: number, resWithCookie?: RequestResponse) {
     config.vectorArray.map((vector, index) => {
       printHeader(`VECTOR ${index} = ${vector}  `);
       let values = Array<string>();
@@ -82,33 +88,47 @@ export function fuzzerTest(config: TestConfig) {
           values.push($(el).attr('name').concat($(el).attr('value')));
         }
       });
+      let queryString = '?'.concat(values.join('&'));
       let time = 0;
       let start = timer();
-      let queryString = '?'.concat(values.join('&'));
-      testFormMethodGET(config, queryString)
-        .subscribe(res => {
-          time += timer() - start;
-          let thisTaskTime = howLong(time);
-          printRes(res, queryString, false, thisTaskTime);
-          checkSensitive();
-          checkSensitive();
+      if (resWithCookie) {
+        testFormMethodGET(config, queryString, resWithCookie)
+          .subscribe(res => {
+            time += timer() - start;
+            let thisTaskTime = howLong(time);
+            printRes(res, queryString, false, thisTaskTime);
+            checkSensitive();
+            checkSensitive();
+          })
+      } else {
+        testFormMethodGET(config, queryString)
+          .subscribe(res => {
+            time += timer() - start;
+            let thisTaskTime = howLong(time);
+            printRes(res, queryString, false, thisTaskTime);
+            checkSensitive();
+            checkSensitive();
 
-        })
+          })
+
+      }
 
     })
 
 
   }
-  function testFormMethodGET(config: TestConfig, queryString: string) {
-    return requestGET({ url: config.url.concat(queryString) })
-
+  function testFormMethodGET(config: TestConfig, queryString: string, resWithCookie?: RequestResponse) {
+    if (resWithCookie) {
+      return requestGET({ url: config.url.concat(queryString), headers: { 'Cookie': resWithCookie.cookie } })
+    }
+    return requestGET({ url: config.url.concat(queryString) });
   }
 
   function testFormMethodPOST() {
 
   }
 
-  function checkSanitization() {
+  function checkSanitization(config: TestConfig, res: RequestResponse) {
     console.log('TODO SANITIZATION')
 
   }
