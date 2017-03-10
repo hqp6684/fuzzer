@@ -20,11 +20,13 @@ Change
 
     `src/fuzzer/services/fuzzer-custom-auth.service.ts`
     
-line 27 `let postTargetFile = '/login.php';`
+line 27 
+    
+    `let postTargetFile = '/login.php';`
 
 to the path that contains dvwa, in the case of XAMMP portable 
 
-`let postTargetFile = '/dvwa/login.php';` 
+    `let postTargetFile = '/dvwa/login.php'`
 
              
     

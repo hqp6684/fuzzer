@@ -1,3 +1,4 @@
+import { AsyncSubject } from 'rxjs/Rx';
 import { CoreOptions, requestGET, RequestResponse } from './fuzzer-request.service';
 import { fuzzerAuthenticator } from './fuzzer-custom-auth.service';
 import { FuzzerConfig, TestConfig } from '../fuzzer.options';
@@ -17,6 +18,7 @@ export function fuzzerTest(config: TestConfig) {
       .map(extractSensitive)
       .flatMap(fuzzerAuthenticator)
       .subscribe(res => {
+        runTest(config, res);
 
       })
     // .subscribe(config => {
@@ -27,9 +29,23 @@ export function fuzzerTest(config: TestConfig) {
   } else {
     validateVectorsFile(config)
       .map(extractVectors)
-      .subscribe(config => {
-        validateSensitiveFile(config).map(extractSensitive);
+      .flatMap(validateSensitiveFile)
+      .map(extractSensitive)
+      .subscribe(_config => {
+        runTest(_config);
+
       })
+
+  }
+
+
+  function runTest(config: TestConfig, res?: RequestResponse) {
+    if (res) {
+      let body = getBody(config, res);
+
+    } else {
+      let body = getBody(config);
+    }
 
   }
   /**
@@ -37,20 +53,26 @@ export function fuzzerTest(config: TestConfig) {
    * @param config TestConfig
    * @param customAuthRes response contains cookie
    */
-  function getBody(config: TestConfig, customAuthRes?: RequestResponse) {
+  function getBody(config: TestConfig, customAuthRes?: RequestResponse): Observable<string> {
+    let body = new AsyncSubject<string>();
 
     let requestConfig: CoreOptions = { url: config.url };
     if (customAuthRes) {
       requestConfig = { url: config.url, headers: { 'Cookie': customAuthRes.cookie } };
       requestGET(requestConfig).subscribe(res => {
         console.log(res.body);
+        body.next(res.body);
+        body.complete();
       })
     } else {
       requestGET(requestConfig).subscribe(res => {
         console.log(res.body);
+        body.next(res.body);
+        body.complete();
       })
 
     }
+    return body;
 
   }
 
