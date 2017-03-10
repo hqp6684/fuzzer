@@ -184,13 +184,13 @@ export function fuzzerTest(config: TestConfig) {
     if (customAuthRes) {
       requestConfig = { url: config.url, headers: { 'Cookie': customAuthRes.cookie } };
       requestGET(requestConfig).subscribe(res => {
-        console.log(res.body);
+        // console.log(res.body);
         body.next(res.body);
         body.complete();
       })
     } else {
       requestGET(requestConfig).subscribe(res => {
-        console.log(res.body);
+        // console.log(res.body);
         body.next(res.body);
         body.complete();
       })
