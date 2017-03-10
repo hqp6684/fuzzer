@@ -1,4 +1,4 @@
-import { formDiscovery, printHeader } from './fuzzer-discover.service';
+import { formDiscovery, printHeader, printLineBreak } from './fuzzer-discover.service';
 import { AsyncSubject } from 'rxjs/Rx';
 import { CoreOptions, requestGET, RequestResponse } from './fuzzer-request.service';
 import { fuzzerAuthenticator, printRes } from './fuzzer-custom-auth.service';
@@ -93,6 +93,7 @@ export function fuzzerTest(config: TestConfig) {
             printRes(res, queryString, false, thisTaskTime);
             checkSanitization(config, res, queryString, formIndex, vector);
             checkSensitive(config, res);
+            printLineBreak();
           })
       } else {
         testFormMethodGET(config, queryString)
@@ -103,6 +104,7 @@ export function fuzzerTest(config: TestConfig) {
             printRes(res, queryString, false, thisTaskTime);
             checkSanitization(config, res, queryString, formIndex, vector);
             checkSensitive(config, res);
+            printLineBreak();
 
           })
 
@@ -145,7 +147,7 @@ export function fuzzerTest(config: TestConfig) {
       if (index === formIndex) {
         printHeader('Query String Before');
         console.log(originalQueryString);
-        console.log(url.parse(originalQueryString))
+        // console.log(url.parse(originalQueryString))
         console.log('Returned Form');
         console.log($(form).html());
         printHeader('Query String After');
