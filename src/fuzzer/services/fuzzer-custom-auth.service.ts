@@ -24,7 +24,7 @@ export function fuzzerAuthenticator(config: FuzzerConfig): Observable<RequestRes
 function dvwaAuth(config: FuzzerConfig) {
   console.log(chalk.bgBlack.cyan.bold('DVWA Custom Authentication'));
 
-  let postTargetFile = './login.php';
+  let postTargetFile = '/login.php';
 
   // this is hard-coded,
   // TODO: get this path from response header after post credential response headers['location']

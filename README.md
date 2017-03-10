@@ -10,14 +10,14 @@
 
  
 
-NOTE for `--custom-auth=dvwa` :
-    If `dvwa` is the root folder (in Gitlab CI), ignore this.
-    If not, for instance, the dvwa in XAMMP portable is in http://rootUrl/dvwa/
-    Change
-        File `src/fuzzer/services/fuzzer-custom-auth.service.ts`
-        line 27 `let postTargetFile = './login.php';` 
-       to the path that contains dvwa, in the case of XAMMP portable 
-            `let postTargetFile = './dvwa/login.php';` 
+NOTE for `--custom-auth=dvwa`
+If `dvwa` is the root folder (in Gitlab CI), ignore this.
+If not, for instance, the dvwa in XAMMP portable is in http://rootUrl/dvwa/
+Change
+    `src/fuzzer/services/fuzzer-custom-auth.service.ts`
+line 27 `let postTargetFile = '/login.php';`
+to the path that contains dvwa, in the case of XAMMP portable 
+`let postTargetFile = '/dvwa/login.php';` 
              
     
     
