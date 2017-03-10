@@ -116,7 +116,7 @@ export function fuzzerTest(config: TestConfig) {
         values.push($(el).attr('name').concat('=', $(el).attr('value')));
       } else {
         if (vector) {
-          values.push($(el).attr('name').concat('=', $(el).attr(vector)));
+          values.push($(el).attr('name').concat('=', vector));
         }
 
       }
