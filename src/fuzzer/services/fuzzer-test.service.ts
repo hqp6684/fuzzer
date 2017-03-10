@@ -80,15 +80,7 @@ export function fuzzerTest(config: TestConfig) {
   function testVector(config: TestConfig, $: CheerioStatic, form: CheerioElement, formIndex: number, resWithCookie?: RequestResponse) {
     config.vectorArray.map((vector, index) => {
       printHeader(`VECTOR ${index} = ${vector}  `);
-      let values = Array<string>();
-
-
-      $(form).find('input').map((index, el) => {
-        if ($(el).attr('value')) {
-          values.push($(el).attr('name').concat($(el).attr('value')));
-        }
-      });
-      let queryString = '?'.concat(values.join('&'));
+      let queryString = generateQueryString($, form);
       let time = 0;
       let start = timer();
       if (resWithCookie) {
@@ -97,7 +89,7 @@ export function fuzzerTest(config: TestConfig) {
             time += timer() - start;
             let thisTaskTime = howLong(time);
             printRes(res, queryString, false, thisTaskTime);
-            checkSensitive();
+            checkSanitization(config, res, queryString, formIndex, vector);
             checkSensitive();
           })
       } else {
@@ -114,7 +106,17 @@ export function fuzzerTest(config: TestConfig) {
       }
 
     })
+  }
 
+  function generateQueryString($: CheerioStatic, form: CheerioElement) {
+    let values = Array<string>();
+    $(form).find('input').map((index, el) => {
+      if ($(el).attr('value')) {
+        values.push($(el).attr('name').concat($(el).attr('value')));
+      }
+    });
+    let queryString = '?'.concat(values.join('&'));
+    return queryString;
 
   }
   function testFormMethodGET(config: TestConfig, queryString: string, resWithCookie?: RequestResponse) {
@@ -128,8 +130,20 @@ export function fuzzerTest(config: TestConfig) {
 
   }
 
-  function checkSanitization(config: TestConfig, res: RequestResponse) {
-    console.log('TODO SANITIZATION')
+  function checkSanitization(config: TestConfig, res: RequestResponse, originalQueryString: string, formIndex: number, vector: string) {
+    console.log('CHECK SANITIZATION')
+    let $ = cheerio.load(res.body);
+    let forms = $('form').map((index, el) => {
+      if (index === formIndex) {
+        printHeader('BEFORE');
+        console.log(originalQueryString);
+        printHeader('AFTER');
+        console.log(generateQueryString($, el))
+        console.log(`Index of vector is : ${originalQueryString.indexOf(vector)}`)
+      }
+    })
+
+
 
   }
   function checkSensitive() {
