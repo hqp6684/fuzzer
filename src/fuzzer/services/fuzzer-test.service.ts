@@ -133,8 +133,9 @@ export function fuzzerTest(config: TestConfig) {
     if (resWithCookie) {
 
       return requestGET({ url: config.url.concat(queryString), headers: { 'Cookie': resWithCookie.cookie } })
+    } else {
+      return requestGET({ url: config.url.concat(queryString) });
     }
-    return requestGET({ url: config.url.concat(queryString) });
   }
 
   function testFormMethodPOST() {
