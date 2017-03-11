@@ -90,7 +90,7 @@ export function fuzzerTest(config: TestConfig) {
             time += timer() - start;
             let thisTaskTime = howLong(time);
             printHeader(`VECTOR ${index} = ${vector}  `);
-            printRes(res, queryString, false, thisTaskTime);
+            printRes(res, config.url.concat(queryString), false, thisTaskTime);
             checkSanitization(config, res, queryString, formIndex, vector);
             checkSensitive(config, res);
             printLineBreak();
@@ -131,6 +131,7 @@ export function fuzzerTest(config: TestConfig) {
   }
   function testFormMethodGET(config: TestConfig, queryString: string, resWithCookie?: RequestResponse) {
     if (resWithCookie) {
+
       return requestGET({ url: config.url.concat(queryString), headers: { 'Cookie': resWithCookie.cookie } })
     }
     return requestGET({ url: config.url.concat(queryString) });
@@ -145,15 +146,16 @@ export function fuzzerTest(config: TestConfig) {
     let $ = cheerio.load(res.body);
     let forms = $('form').map((index, form) => {
       if (index === formIndex) {
-        printHeader('Query String Before');
-        console.log(originalQueryString);
+        printHeader('Before Submit');
+        console.log(config.url.concat(originalQueryString));
         // console.log(url.parse(originalQueryString))
-        console.log('Returned Form');
-        console.log($(form).html());
-        printHeader('Query String After');
-        let afterQueryString = generateQueryString($, form);
+        // console.log('Returned Form');
+        // console.log($(form).html());
+        printHeader('After Submit');
+        // let afterQueryString = generateQueryString($, form);
+        let afterQueryString = (<any>res.res.request).uri;
         console.log(afterQueryString);
-        console.log(`Index of vector is : ${afterQueryString.indexOf(vector)}`)
+        // console.log(`Index of vector is : ${afterQueryString.indexOf(vector)}`)
 
       }
     })

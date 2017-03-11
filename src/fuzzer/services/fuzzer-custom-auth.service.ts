@@ -23,8 +23,10 @@ export function fuzzerAuthenticator(config: FuzzerConfig): Observable<RequestRes
 
 function dvwaAuth(config: FuzzerConfig) {
   console.log(chalk.bgBlack.cyan.bold('DVWA Custom Authentication'));
-
+  // For GITLAB CI
   let postTargetFile = '/login.php';
+  // For local
+  // let postTargetFile = '/dvwa/login.php';
 
   // this is hard-coded,
   // TODO: get this path from response header after post credential response headers['location']
@@ -45,11 +47,6 @@ function dvwaAuth(config: FuzzerConfig) {
   return requestGET({ url: postURL })
     .flatMap(res => postCredential(postURL, res))
     .flatMap(cookie => getIndexAfterPostCredential(getURL, cookie))
-  // .subscribe(res => {
-  //   console.log(chalk.bgBlack.cyan.bold('Finish'));
-
-  // })
-
 
 
 }
@@ -125,6 +122,7 @@ function getIndexAfterPostCredential(url: string, cookieHeader: string) {
     })
 }
 
+
 export function printRes(res: RequestResponse, url?: string, loggedIn?: boolean, time?: string) {
   if (url) {
     console.log(chalk.bgBlack.cyan.bold(`-----------------------------------==== ${url} ====-----------------------------------`));
@@ -148,7 +146,7 @@ export function printRes(res: RequestResponse, url?: string, loggedIn?: boolean,
     ))
   }
   if (time) {
-    console.log(`-----------------------------------==== TOOK ${time} ====-----------------------------------`)
+    console.log(`-----------------------------------==== TOOK ${time}  ====-----------------------------------`)
 
   }
   console.log(`-----------------------------------==== END REQUEST RESPONSE ====-----------------------------------`)
