@@ -255,7 +255,7 @@ export function fuzzerTest(config: TestConfig) {
     console.log(chalk.bgBlack.cyan('Extracting vectors from input'));
     let content = fs.readFileSync(config.vectorsFilePath).toString().split('\n');
     console.log(content);
-    config.vectorArray = content;
+    config.vectorArray = content.filter(value => (value.length > 0));
     return config;
   }
 
@@ -276,6 +276,7 @@ export function fuzzerTest(config: TestConfig) {
     let content = fs.readFileSync(config.sensitiveFilePath).toString().split('\n');
     console.log(content);
     config.sensitiveArray = content;
+    config.sensitiveArray = content.filter(value => (value.length > 0));
     return config;
   }
 
